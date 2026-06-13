@@ -274,6 +274,23 @@ function updatePreview() {
   const data = getFormData();
   const preview = document.getElementById('resumePreview');
   preview.innerHTML = renderTemplate(state.template, data);
+
+  // Apply single page fit class
+  const fitCheckbox = document.getElementById('fitSinglePage');
+  if (fitCheckbox && fitCheckbox.checked) {
+    preview.classList.add('fit-single-page');
+  } else {
+    preview.classList.remove('fit-single-page');
+  }
+
+  // Apply selected font family variable
+  const fontSelect = document.getElementById('resumeFont');
+  if (fontSelect && fontSelect.value) {
+    preview.style.setProperty('--resume-font', fontSelect.value);
+  } else {
+    preview.style.removeProperty('--resume-font');
+  }
+
   applyScale();
 }
 
@@ -832,7 +849,6 @@ async function downloadPDF() {
   const btn = document.getElementById('downloadBtn');
   const data = getFormData();
   const name = data.fullName || 'resume';
-  const fitSinglePage = document.getElementById('fitSinglePage') ? document.getElementById('fitSinglePage').checked : true;
 
   btn.innerHTML = '<span class="spinner"></span> Generating...';
   btn.disabled = true;
@@ -853,33 +869,7 @@ async function downloadPDF() {
   exportHost.appendChild(exportResume);
   document.body.appendChild(exportHost);
   
-  // Wait for rendering to measure offsetHeight accurately
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-
-  const originalHeight = exportResume.offsetHeight;
-  
-  let renderTarget = exportResume;
-  let exportContainer = null;
-
-  if (fitSinglePage && originalHeight > 1123) {
-    const scale = 1123 / originalHeight;
-    exportResume.style.transform = `scale(${scale})`;
-    exportResume.style.transformOrigin = 'top left';
-    exportResume.style.width = `${794 / scale}px`;
-    exportResume.style.height = `${originalHeight}px`;
-
-    exportContainer = document.createElement('div');
-    exportContainer.style.width = '794px';
-    exportContainer.style.height = '1123px';
-    exportContainer.style.overflow = 'hidden';
-    exportContainer.style.position = 'relative';
-    exportContainer.style.background = '#ffffff';
-
-    exportResume.remove();
-    exportContainer.appendChild(exportResume);
-    exportHost.appendChild(exportContainer);
-    renderTarget = exportContainer;
-  }
 
   const opt = {
     margin: 0,
@@ -891,7 +881,7 @@ async function downloadPDF() {
   };
 
   try {
-    await html2pdf().set(opt).from(renderTarget).save();
+    await html2pdf().set(opt).from(exportResume).save();
     showToast('✓ Resume downloaded!', 'success');
   } catch (e) {
     console.error(e);

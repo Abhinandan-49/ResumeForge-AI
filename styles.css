@@ -1067,6 +1067,74 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ============================================
+   FIT TO SINGLE PAGE COMPACTION
+   ============================================ */
+.resume-preview.fit-single-page,
+.pdf-export-resume.fit-single-page {
+  font-size: 13.5px !important;
+}
+
+.fit-single-page .r-section {
+  margin-top: 14px !important;
+  margin-bottom: 10px !important;
+}
+
+.fit-single-page .r-item {
+  margin-bottom: 8px !important;
+}
+
+.fit-single-page .r-header {
+  padding-top: 24px !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+.fit-single-page .r-summary,
+.fit-single-page .r-item-desc {
+  line-height: 1.5 !important;
+}
+
+/* Template Specific Compactions */
+.fit-single-page.resume-classic { padding: 32px 40px !important; }
+.fit-single-page.resume-classic .r-header { padding-bottom: 10px !important; margin-bottom: 12px !important; }
+
+.fit-single-page.resume-modern .r-sidebar { padding: 24px 16px !important; }
+.fit-single-page.resume-modern .r-main { padding: 24px 20px !important; }
+
+.fit-single-page.resume-creative .r-header { padding: 20px 32px !important; }
+.fit-single-page.resume-creative .r-left { padding: 16px 16px 16px 32px !important; }
+.fit-single-page.resume-creative .r-right { padding: 16px 16px !important; }
+
+.fit-single-page.resume-executive .r-header { padding: 20px 32px !important; }
+.fit-single-page.resume-executive .r-body { padding: 16px 32px !important; }
+
+.fit-single-page.resume-tech .r-header { padding: 16px 24px !important; }
+.fit-single-page.resume-tech .r-body { padding: 12px 24px !important; }
+
+.fit-single-page.resume-compact { padding: 24px 32px !important; }
+
+.fit-single-page.resume-slate .r-header { padding: 24px 36px !important; min-height: auto !important; }
+.fit-single-page.resume-slate main { padding: 20px 24px 24px 36px !important; }
+.fit-single-page.resume-slate aside { padding: 20px 24px 24px 20px !important; }
+
+.fit-single-page.resume-elegant { padding: 32px 44px 32px 52px !important; }
+
+.fit-single-page.resume-minimal { padding: 32px 40px !important; }
+
+/* ============================================
+   CUSTOM FONT FAMILY OVERRIDES
+   ============================================ */
+#resumePreview[style*="--resume-font"],
+.pdf-export-resume[style*="--resume-font"] {
+  font-family: var(--resume-font) !important;
+}
+
+#resumePreview[style*="--resume-font"] *,
+.pdf-export-resume[style*="--resume-font"] * {
+  font-family: var(--resume-font) !important;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 1100px) {
