@@ -490,14 +490,19 @@
         <div class="preview-header">
           <span>Live Preview</span>
           <div class="preview-actions">
-            <button class="preview-btn active" onclick="setPreviewScale(0.7, this)">70%</button>
+            <button class="preview-btn active" onclick="setPreviewScale('auto', this)">Auto Fit</button>
+            <button class="preview-btn" onclick="setPreviewScale(0.7, this)">70%</button>
             <button class="preview-btn" onclick="setPreviewScale(0.85, this)">85%</button>
             <button class="preview-btn" onclick="setPreviewScale(1, this)">100%</button>
           </div>
         </div>
         <div class="preview-wrapper" id="previewWrapper">
-          <div class="resume-preview" id="resumePreview">
-            <!-- Dynamic content rendered here -->
+          <div class="preview-viewport" id="previewViewport">
+            <div class="preview-scale-container" id="previewScaleContainer">
+              <div class="resume-preview" id="resumePreview">
+                <!-- Dynamic content rendered here -->
+              </div>
+            </div>
           </div>
         </div>
       </div>

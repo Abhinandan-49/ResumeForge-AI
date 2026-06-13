@@ -11,6 +11,7 @@ let state = {
   educations: [],
   projects: [],
   previewScale: 0.7,
+  zoomMode: 'auto',
   apiKey: localStorage.getItem('gemini_api_key') || ''
 };
 
@@ -22,7 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
   addEducation();
   addProject();
   updatePreview();
-  setPreviewScale(0.7, document.querySelector('.preview-btn'));
+  setPreviewScale('auto', document.querySelector('.preview-btn'));
+  window.addEventListener('resize', applyScale);
 });
 
 function initNavScroll() {
@@ -318,18 +320,58 @@ function updatePreview() {
   const data = getFormData();
   const preview = document.getElementById('resumePreview');
   preview.innerHTML = renderTemplate(state.template, data);
-  preview.style.transform = `scale(${state.previewScale})`;
-  preview.style.marginBottom = `${(state.previewScale - 1) * 1123}px`;
+  applyScale();
+}
+
+function applyScale() {
+  const wrapper = document.getElementById('previewWrapper');
+  const viewport = document.getElementById('previewViewport');
+  const container = document.getElementById('previewScaleContainer');
+  if (!wrapper || !viewport || !container) return;
+
+  const wrapperWidth = wrapper.clientWidth;
+  const computedStyle = window.getComputedStyle(wrapper);
+  const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
+  const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
+  const availableWidth = Math.max(200, wrapperWidth - paddingLeft - paddingRight - 8);
+
+  let scale;
+  if (state.zoomMode === 'auto') {
+    scale = Math.min(1.0, availableWidth / 794);
+    if (scale < 0.2) scale = 0.2;
+  } else {
+    scale = state.previewScale;
+  }
+
+  container.style.transform = `scale(${scale})`;
+  viewport.style.width = `${794 * scale}px`;
+  viewport.style.height = `${1123 * scale}px`;
 }
 
 function setPreviewScale(scale, btn) {
-  state.previewScale = scale;
-  const preview = document.getElementById('resumePreview');
-  preview.style.transform = `scale(${scale})`;
-  preview.style.transformOrigin = 'top center';
-  preview.style.marginBottom = `${(scale - 1) * 1123}px`;
+  if (scale === 'auto') {
+    state.zoomMode = 'auto';
+  } else {
+    state.zoomMode = 'manual';
+    state.previewScale = scale;
+  }
+  
+  applyScale();
+  
   document.querySelectorAll('.preview-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+  if (btn) {
+    btn.classList.add('active');
+  } else {
+    const btns = document.querySelectorAll('.preview-btn');
+    btns.forEach(b => {
+      const onclickAttr = b.getAttribute('onclick');
+      if (scale === 'auto' && onclickAttr.includes("'auto'")) {
+        b.classList.add('active');
+      } else if (scale !== 'auto' && onclickAttr.includes(scale.toString())) {
+        b.classList.add('active');
+      }
+    });
+  }
 }
 
 // ============ TEMPLATE RENDERERS ============
@@ -821,14 +863,28 @@ async function downloadPDF() {
   btn.innerHTML = '<span class="spinner"></span> Generating...';
   btn.disabled = true;
 
-  // Temporarily set preview to 100% scale for PDF
   const preview = document.getElementById('resumePreview');
-  const prevScale = state.previewScale;
-  preview.style.transform = 'scale(1)';
-  preview.style.marginBottom = '0';
+  const container = document.getElementById('previewScaleContainer');
+  const viewport = document.getElementById('previewViewport');
+  if (!preview || !container || !viewport) {
+    btn.innerHTML = '<span>📥</span> Download PDF';
+    btn.disabled = false;
+    return;
+  }
 
-  // Small delay to allow rerender
-  await new Promise(r => setTimeout(r, 200));
+  // Temporarily disable scaling & transitions to ensure a clean 1:1 render
+  const originalTransform = container.style.transform;
+  const originalTransition = container.style.transition;
+  const originalVWidth = viewport.style.width;
+  const originalVHeight = viewport.style.height;
+
+  container.style.transition = 'none';
+  container.style.transform = 'none';
+  viewport.style.width = '794px';
+  viewport.style.height = '1123px';
+
+  // Small delay to allow browser layout paint
+  await new Promise(r => setTimeout(r, 100));
 
   const opt = {
     margin: 0,
@@ -842,12 +898,19 @@ async function downloadPDF() {
     await html2pdf().set(opt).from(preview).save();
     showToast('✓ Resume downloaded!', 'success');
   } catch (e) {
+    console.error(e);
     showToast('Error generating PDF', 'error');
   }
 
-  // Restore scale
-  preview.style.transform = `scale(${prevScale})`;
-  preview.style.marginBottom = `${(prevScale - 1) * 1123}px`;
+  // Restore scaling & transitions
+  container.style.transform = originalTransform;
+  viewport.style.width = originalVWidth;
+  viewport.style.height = originalVHeight;
+  
+  setTimeout(() => {
+    container.style.transition = originalTransition;
+  }, 50);
+
   btn.innerHTML = '<span>📥</span> Download PDF';
   btn.disabled = false;
 }
