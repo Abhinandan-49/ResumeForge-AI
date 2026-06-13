@@ -316,7 +316,14 @@ function applyScale() {
 
   container.style.transform = `scale(${scale})`;
   viewport.style.width = `${794 * scale}px`;
-  viewport.style.height = `${1123 * scale}px`;
+
+  // Dynamically calculate the total content height of the resume
+  const preview = document.getElementById('resumePreview');
+  const contentHeight = preview ? preview.scrollHeight : 1123;
+  const finalHeight = Math.max(1123, contentHeight);
+
+  viewport.style.height = `${finalHeight * scale}px`;
+  container.style.height = `${finalHeight}px`;
 }
 
 function setPreviewScale(scale, btn) {
@@ -872,7 +879,7 @@ async function downloadPDF() {
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
   const opt = {
-    margin: 0,
+    margin: [30, 0, 30, 0],
     filename: `${name.replace(/\s+/g, '_')}_Resume.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     pagebreak: { 

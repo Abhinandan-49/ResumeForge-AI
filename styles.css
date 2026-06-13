@@ -774,7 +774,10 @@ body {
   width: 794px; /* A4 width at 96dpi */
   min-height: 1123px; /* A4 height */
   background: white;
-  overflow: hidden; position: relative;
+  overflow: visible; position: relative;
+  /* Premium dashed guide line at every 1123px page boundary */
+  background-image: linear-gradient(to bottom, transparent 1122px, rgba(139,92,246,0.3) 1122px, rgba(139,92,246,0.3) 1123px, transparent 1123px);
+  background-size: 100% 1123px;
 }
 
 .pdf-export-host {
@@ -786,7 +789,7 @@ body {
   z-index: -1;
   pointer-events: none;
 }
-.pdf-export-resume { width: 794px; min-height: 1123px; overflow: visible; }
+.pdf-export-resume { width: 794px; min-height: 1123px; overflow: visible; background-image: none !important; }
 
 /* Prevent elements from breaking across PDF pages */
 .r-item,
