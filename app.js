@@ -875,7 +875,10 @@ async function downloadPDF() {
     margin: 0,
     filename: `${name.replace(/\s+/g, '_')}_Resume.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    pagebreak: { mode: ['css', 'legacy'] },
+    pagebreak: { 
+      mode: ['css', 'legacy'], 
+      avoid: ['.r-item', '.r-section-title', '.r-summary', '.r-skills-grid', '.r-skills-row', '.r-contact', '.r-contact-row', '.r-sidebar-item', '.r-sidebar-section', '.r-row']
+    },
     html2canvas: { scale: 2, useCORS: true, letterRendering: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
     jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait', hotfixes: ['px_scaling'] }
   };

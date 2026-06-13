@@ -788,6 +788,21 @@ body {
 }
 .pdf-export-resume { width: 794px; min-height: 1123px; overflow: visible; }
 
+/* Prevent elements from breaking across PDF pages */
+.r-item,
+.r-section-title,
+.r-summary,
+.r-skills-grid,
+.r-skills-row,
+.r-contact,
+.r-contact-row,
+.r-sidebar-item,
+.r-sidebar-section,
+.r-row {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
 /* ============================================
    RESUME TEMPLATES (ACTUAL OUTPUT)
    ============================================ */
