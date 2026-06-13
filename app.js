@@ -879,7 +879,7 @@ async function downloadPDF() {
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
   const opt = {
-    margin: [15, 0, 20, 0],
+    margin: [8, 0, 15, 0],
     filename: `${name.replace(/\s+/g, '_')}_Resume.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     pagebreak: { 
