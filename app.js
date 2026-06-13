@@ -17,10 +17,7 @@ let state = {
 // ============ INIT ============
 document.addEventListener('DOMContentLoaded', () => {
   initNavScroll();
-  addExperience();
-  addEducation();
-  addProject();
-  updatePreview();
+  fillSampleData();
   setPreviewScale('auto', document.querySelector('.preview-btn'));
   window.addEventListener('resize', applyScale);
 });
@@ -835,6 +832,7 @@ async function downloadPDF() {
   const btn = document.getElementById('downloadBtn');
   const data = getFormData();
   const name = data.fullName || 'resume';
+  const fitSinglePage = document.getElementById('fitSinglePage') ? document.getElementById('fitSinglePage').checked : true;
 
   btn.innerHTML = '<span class="spinner"></span> Generating...';
   btn.disabled = true;
@@ -854,7 +852,34 @@ async function downloadPDF() {
   exportResume.classList.add('pdf-export-resume');
   exportHost.appendChild(exportResume);
   document.body.appendChild(exportHost);
+  
+  // Wait for rendering to measure offsetHeight accurately
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+  const originalHeight = exportResume.offsetHeight;
+  
+  let renderTarget = exportResume;
+  let exportContainer = null;
+
+  if (fitSinglePage && originalHeight > 1123) {
+    const scale = 1123 / originalHeight;
+    exportResume.style.transform = `scale(${scale})`;
+    exportResume.style.transformOrigin = 'top left';
+    exportResume.style.width = `${794 / scale}px`;
+    exportResume.style.height = `${originalHeight}px`;
+
+    exportContainer = document.createElement('div');
+    exportContainer.style.width = '794px';
+    exportContainer.style.height = '1123px';
+    exportContainer.style.overflow = 'hidden';
+    exportContainer.style.position = 'relative';
+    exportContainer.style.background = '#ffffff';
+
+    exportResume.remove();
+    exportContainer.appendChild(exportResume);
+    exportHost.appendChild(exportContainer);
+    renderTarget = exportContainer;
+  }
 
   const opt = {
     margin: 0,
@@ -866,7 +891,7 @@ async function downloadPDF() {
   };
 
   try {
-    await html2pdf().set(opt).from(exportResume).save();
+    await html2pdf().set(opt).from(renderTarget).save();
     showToast('✓ Resume downloaded!', 'success');
   } catch (e) {
     console.error(e);
@@ -881,42 +906,49 @@ async function downloadPDF() {
 
 // ============ SAMPLE DATA ============
 function fillSampleData() {
-  document.getElementById('fullName').value = 'Abhinandan Kumar';
-  document.getElementById('jobTitle').value = 'Full Stack Developer & AI Enthusiast';
-  document.getElementById('email').value = 'hello@madcoder.in';
-  document.getElementById('phone').value = '+91 98765 43210';
+  document.getElementById('fullName').value = 'Abhinandan Dubey';
+  document.getElementById('jobTitle').value = 'Data Science & Full-Stack Developer';
+  document.getElementById('email').value = 'abhidubey2536@gmail.com';
+  document.getElementById('phone').value = '(+91) 6306641291';
   document.getElementById('location').value = 'India';
-  document.getElementById('linkedin').value = 'linkedin.com/in/abhinandan';
+  document.getElementById('linkedin').value = 'linkedin.com/in/Abhinandan49';
   document.getElementById('website').value = 'madcoder.in';
-  document.getElementById('github').value = 'github.com/abhinandan';
-  document.getElementById('summary').value = 'Passionate Full Stack Developer with 3+ years of experience building scalable web applications. Expertise in React, Node.js and cloud technologies. Founded MadCoder.in to share coding knowledge with the developer community. Proven track record of delivering high-impact products and driving technical innovation.';
+  document.getElementById('github').value = 'github.com/Abhinandan-49';
+  document.getElementById('summary').value = 'Data Science and Full-Stack Developer with a B.Tech background, skilled in Python, Deep Learning, Data Analysis, and SQL. Proven ability to build end-to-end solutions — from model development to deployment-ready web interfaces.';
 
-  state.skills = ['React', 'Node.js', 'TypeScript', 'Python', 'AWS', 'MongoDB', 'PostgreSQL', 'Docker', 'Next.js', 'Tailwind CSS', 'GraphQL', 'Git'];
+  state.skills = ['Python', 'Java', 'JavaScript', 'SQL', 'HTML', 'CSS', 'React.js', 'Node.js', 'Next.js', 'Express.js', 'MySQL', 'MongoDB', 'RAG', 'Razorpay', 'Git', 'GitHub', 'VS Code', 'Jupyterlab'];
   renderSkillTags();
 
   state.experiences = [
-    { id: 101, title: 'Senior Full Stack Developer', company: 'Tech Startup', location: 'Remote', start: 'Jan 2023', end: 'Present', desc: 'Led development of core product features serving 50,000+ users.\nArchitected microservices reducing latency by 40%.\nMentored junior developers and conducted code reviews.' },
-    { id: 102, title: 'Frontend Developer', company: 'Digital Agency', location: 'Bengaluru', start: 'Jun 2021', end: 'Dec 2022', desc: 'Built 15+ responsive web apps for enterprise clients.\nImproved website performance scores by 35% through optimization.\nCollaborated with design teams to implement pixel-perfect UIs.' }
+    { id: 101, title: 'Summer Internship Training (Data Science)', company: 'SRDT Pvt. Ltd.', location: 'Lucknow, India', start: 'Sep 2025', end: 'Present', desc: 'Completed Summer Internship Training Program on Data Science with Machine Learning. Worked on café sales data analysis, extracting actionable insights, and building predictive models.' },
+    { id: 102, title: 'Summer Internship Training (Mobile App Development)', company: 'SRDT Pvt. Ltd.', location: 'Lucknow, India', start: 'Jun 2026', end: 'Present', desc: 'Completed Summer Internship Training Program on Mobile App Development. Worked on developing a fitness mobile application.' }
   ];
   renderExperienceList();
 
   state.educations = [
-    { id: 201, degree: 'B.Tech Computer Science', school: 'IIT Delhi', location: 'New Delhi', start: '2017', end: '2021', gpa: '8.7/10', desc: 'Specialization in Software Engineering. Best Project Award 2021.' }
+    { id: 201, degree: 'B.Tech CSE (Data Science)', school: 'SRMCEM', location: 'Lucknow, India', start: '2023', end: '2027', gpa: '7.75/10 CGPA', desc: 'Specialization in Computer Science & Engineering (Data Science).' },
+    { id: 202, degree: 'Intermediate (PCM, CBSE)', school: 'Siddhant World School', location: 'Lucknow, India', start: '2021', end: '2023', gpa: '84.6%', desc: 'Completed Senior Secondary education in Physics, Chemistry, and Mathematics.' },
+    { id: 203, degree: 'High School (CBSE)', school: 'Siddhant World School', location: 'Lucknow, India', start: '2019', end: '2021', gpa: '85%', desc: 'Completed Secondary school education.' }
   ];
   renderEducationList();
 
   state.projects = [
-    { id: 301, name: 'MadCoder.in', tech: 'Next.js, Node.js, MongoDB', link: 'madcoder.in', desc: 'Personal coding portfolio and blog platform with 10,000+ monthly visitors. Features coding tutorials, project showcases, and developer resources.' },
-    { id: 302, name: 'ResumeForge', tech: 'HTML, CSS, JavaScript', link: 'github.com/madcoder/resumeforge', desc: 'Privacy-first resume builder with nine professional templates, guided writing support, live preview, and reliable PDF export.' }
+    { id: 301, name: 'AI-Powered Teaching Assistant', tech: 'React, TypeScript, Vite, Gemini API, RAG, Vector Embeddings, Vercel', link: 'paymentgateway.madcoder.in', desc: 'Built a RAG-based AI assistant that delivers context-aware answers from educational content using semantic search and vector embeddings. Optimized retrieval accuracy and scalability for large knowledge bases through an interactive web application.' },
+    { id: 302, name: 'Responsive Portfolio Website', tech: 'React, JavaScript, HTML, CSS, GitHub, Vercel', link: 'madcoder.in', desc: 'Built a responsive personal portfolio website to showcase projects, skills, and achievements. Designed with a user-centric interface, interactive project sections, and cross-device compatibility to strengthen professional presence and demonstrate front-end development expertise.' },
+    { id: 303, name: 'Payment Gateway Integration Platform', tech: 'React, Node.js, Express.js, MongoDB, Razorpay, REST APIs, Vercel', link: 'paymentgateway.madcoder.in', desc: 'Built a secure payment processing platform with integrated payment gateway APIs for seamless online transactions. Implemented transaction tracking, payment verification, and responsive user interfaces while ensuring reliability and security.' }
   ];
   renderProjectsList();
 
   document.getElementById('languages').value = 'English (Fluent), Hindi (Native)';
-  document.getElementById('certifications').value = 'AWS Certified Developer – Associate\nGoogle Cloud Professional\nMeta Frontend Developer Certificate';
-  document.getElementById('interests').value = 'Open Source Contribution, Technical Blogging, UI/UX Design, Gaming';
+  document.getElementById('certifications').value = 'Programming in Java (Elite + Silver) By NPTEL\nPython for Data Science By NPTEL\nMachine learning fundamentals by L&T edutech\nSQL for data science by great learning';
+  document.getElementById('interests').value = 'Open Source Contribution, Machine Learning, Full-Stack Development, Data Analytics';
+
+  expCount = 102;
+  eduCount = 203;
+  projCount = 303;
 
   updatePreview();
-  showToast('✓ Sample data filled!', 'success');
+  showToast('✓ Resume loaded!', 'success');
 }
 
 // ============ CLEAR FORM ============
