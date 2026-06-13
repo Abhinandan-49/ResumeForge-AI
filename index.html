@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ResumeForge AI — Build Stunning Resumes with AI | by MadCoder</title>
-  <meta name="description" content="ResumeForge AI is a smart resume builder powered by Gemini AI. Choose from multiple professional templates, customize your resume, and download it — built by Abhinandan (madcoder.in)." />
+  <title>ResumeForge - Build a Professional Resume | by MadCoder</title>
+  <meta name="description" content="ResumeForge is a private, browser-based resume builder with nine professional templates, live preview, writing assistance, and reliable PDF export." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -16,7 +16,7 @@
     <div class="nav-container">
       <a href="#" class="nav-logo">
         <span class="logo-icon">⚡</span>
-        <span>ResumeForge <span class="logo-ai">AI</span></span>
+        <span>Resume<span class="logo-ai">Forge</span></span>
       </a>
       <div class="nav-links">
         <a href="#templates" class="nav-link">Templates</a>
@@ -39,14 +39,14 @@
     <div class="hero-content">
       <div class="hero-badge">
         <span class="badge-dot"></span>
-        Powered by Gemini AI · Built by <a href="https://madcoder.in" target="_blank">MadCoder</a>
+        Private by design - built by <a href="https://madcoder.in" target="_blank">MadCoder</a>
       </div>
       <h1 class="hero-title">
         Build Your Dream<br />
         <span class="gradient-text">Resume in Seconds</span>
       </h1>
       <p class="hero-subtitle">
-        AI-powered resume builder with 6 stunning templates. Let Gemini AI craft the perfect content for you — tailored to your role and experience.
+        Create a polished, ATS-friendly resume with nine clean templates, guided writing help, live preview, and one-click PDF export.
       </p>
       <div class="hero-actions">
         <button class="btn-primary" onclick="scrollToBuilder()">
@@ -57,13 +57,13 @@
       </div>
       <div class="hero-stats">
         <div class="stat">
-          <span class="stat-num">6+</span>
+          <span class="stat-num">9</span>
           <span class="stat-label">Templates</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat">
-          <span class="stat-num">AI</span>
-          <span class="stat-label">Powered</span>
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Private</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat">
@@ -89,7 +89,7 @@
           <div class="mockup-item"></div>
         </div>
         <div class="ai-badge floating">
-          <span>✨</span> AI Enhanced
+          <span>+</span> Writing Help
         </div>
       </div>
     </div>
@@ -105,13 +105,13 @@
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon">🤖</div>
-          <h3>Gemini AI Content</h3>
-          <p>Describe your experience, let Gemini AI write compelling bullet points, summaries and skills — tailored to your role.</p>
+          <h3>Writing Assistant</h3>
+          <p>Create focused summaries, objectives, skill suggestions, and stronger experience wording without an account or API key.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">🎨</div>
-          <h3>6 Pro Templates</h3>
-          <p>From minimal to creative — choose from Classic, Modern, Creative, Executive, Tech, and Compact layouts.</p>
+          <h3>9 Pro Templates</h3>
+          <p>Choose from traditional, modern, creative, executive, technical, compact, editorial, and minimal layouts.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">⚡</div>
@@ -142,7 +142,7 @@
     <div class="section-container">
       <div class="section-header">
         <span class="section-tag">Choose Your Style</span>
-        <h2 class="section-title">6 Professional<br/><span class="gradient-text">Resume Templates</span></h2>
+        <h2 class="section-title">9 Professional<br/><span class="gradient-text">Resume Templates</span></h2>
         <p class="section-subtitle">Click any template to use it in the builder</p>
       </div>
       <div class="templates-grid">
@@ -319,6 +319,30 @@
             <span class="template-badge green">Minimal</span>
           </div>
         </div>
+
+        <div class="template-card" data-template="slate" onclick="selectTemplate('slate', this)">
+          <div class="template-preview slate-preview">
+            <div class="new-preview-header"><strong>JOHN DOE</strong><span>PRODUCT MANAGER</span></div>
+            <div class="new-preview-columns"><div class="new-preview-main"><b>PROFILE</b><i></i><i></i><b>EXPERIENCE</b><i></i><i></i><i></i></div><div class="new-preview-side"><b>EXPERTISE</b><i></i><i></i><b>EDUCATION</b><i></i></div></div>
+          </div>
+          <div class="template-info"><span class="template-name">Slate</span><span class="template-badge accent">Professional</span></div>
+        </div>
+
+        <div class="template-card" data-template="elegant" onclick="selectTemplate('elegant', this)">
+          <div class="template-preview elegant-preview">
+            <div class="elegant-preview-head"><small>CURRICULUM VITAE</small><strong>John Doe</strong><span>Editorial Director</span></div>
+            <div class="elegant-preview-body"><b>PROFILE</b><i></i><i></i><b>EXPERIENCE</b><i></i><i></i><b>EDUCATION</b><i></i></div>
+          </div>
+          <div class="template-info"><span class="template-name">Elegant</span><span class="template-badge gold">Editorial</span></div>
+        </div>
+
+        <div class="template-card" data-template="minimal" onclick="selectTemplate('minimal', this)">
+          <div class="template-preview minimal-preview">
+            <div class="minimal-preview-head"><strong>JOHN DOE</strong><span>DESIGN ENGINEER</span></div>
+            <div class="minimal-preview-body"><i></i><i></i><b>EXPERIENCE</b><i></i><i></i><i></i><div><span></span><span></span></div></div>
+          </div>
+          <div class="template-info"><span class="template-name">Minimal</span><span class="template-badge green">ATS Ready</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -335,22 +359,15 @@
           </div>
         </div>
 
-        <!-- AI Assistant Panel -->
+        <!-- Writing Assistant Panel -->
         <div class="ai-panel" id="aiPanel">
           <div class="ai-panel-header">
             <span class="ai-icon">✨</span>
-            <span>Gemini AI Assistant</span>
+            <span>Writing Assistant</span>
             <button class="ai-panel-toggle" onclick="toggleAIPanel()">▲</button>
           </div>
           <div class="ai-panel-body" id="aiPanelBody">
-            <div class="api-key-section" id="apiKeySection">
-              <label for="geminiApiKey">🔑 Gemini API Key</label>
-              <div class="api-key-input-wrapper">
-                <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API key..." />
-                <button onclick="saveApiKey()" class="save-key-btn">Save</button>
-              </div>
-              <a href="https://aistudio.google.com/app/apikey" target="_blank" class="get-key-link">Get free API key →</a>
-            </div>
+            <p class="assistant-note">No account or API key needed. Suggestions are created locally in your browser.</p>
             <div class="ai-controls">
               <select id="aiAction" class="ai-select">
                 <option value="summary">✍️ Write Professional Summary</option>
@@ -361,12 +378,12 @@
               </select>
               <input type="text" id="aiContext" placeholder="Describe your role / experience..." class="ai-context-input" />
               <button class="ai-generate-btn" onclick="generateWithAI()" id="aiGenerateBtn">
-                <span id="aiButtonText">✨ Generate with Gemini</span>
+                <span id="aiButtonText">Create suggestion</span>
               </button>
             </div>
             <div class="ai-output" id="aiOutput" style="display:none;">
               <div class="ai-output-header">
-                <span>AI Generated Content</span>
+                <span>Writing Suggestion</span>
                 <button onclick="copyAIOutput()" class="copy-btn">📋 Copy</button>
               </div>
               <div class="ai-output-text" id="aiOutputText"></div>
@@ -514,7 +531,7 @@
     <div class="footer-container">
       <div class="footer-brand">
         <span class="logo-icon">⚡</span>
-        <span>ResumeForge AI</span>
+        <span>ResumeForge</span>
       </div>
       <p class="footer-tagline">Built with ❤️ by <a href="https://madcoder.in" target="_blank">Abhinandan (MadCoder)</a></p>
       <div class="footer-links">
@@ -522,7 +539,7 @@
         <a href="#templates">Templates</a>
         <a href="#builder">Builder</a>
       </div>
-      <p class="footer-copy">© 2025 ResumeForge AI. No data stored. Your privacy matters.</p>
+      <p class="footer-copy">© 2026 ResumeForge. No data stored. Your privacy matters.</p>
     </div>
   </footer>
 

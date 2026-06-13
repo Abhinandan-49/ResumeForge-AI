@@ -11,14 +11,12 @@ let state = {
   educations: [],
   projects: [],
   previewScale: 0.7,
-  zoomMode: 'auto',
-  apiKey: localStorage.getItem('gemini_api_key') || ''
+  zoomMode: 'auto'
 };
 
 // ============ INIT ============
 document.addEventListener('DOMContentLoaded', () => {
   initNavScroll();
-  initApiKey();
   addExperience();
   addEducation();
   addProject();
@@ -31,47 +29,6 @@ function initNavScroll() {
   window.addEventListener('scroll', () => {
     document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
   });
-}
-
-function initApiKey() {
-  if (state.apiKey) {
-    document.getElementById('geminiApiKey').value = state.apiKey;
-    document.getElementById('apiKeySection').style.display = 'none';
-    showApiSavedIndicator();
-  }
-}
-
-function showApiSavedIndicator() {
-  const section = document.getElementById('apiKeySection');
-  section.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.8rem;">
-      <span style="color:var(--accent-green);">✓ API Key saved</span>
-      <button onclick="resetApiKey()" style="background:none;border:none;color:var(--text-secondary);cursor:pointer;font-size:0.75rem;text-decoration:underline;">Change</button>
-    </div>
-  `;
-}
-
-function saveApiKey() {
-  const key = document.getElementById('geminiApiKey').value.trim();
-  if (!key) { showToast('Please enter a valid API key', 'error'); return; }
-  state.apiKey = key;
-  localStorage.setItem('gemini_api_key', key);
-  showApiSavedIndicator();
-  showToast('✓ API Key saved successfully!', 'success');
-}
-
-function resetApiKey() {
-  state.apiKey = '';
-  localStorage.removeItem('gemini_api_key');
-  const section = document.getElementById('apiKeySection');
-  section.innerHTML = `
-    <label for="geminiApiKey">🔑 Gemini API Key</label>
-    <div class="api-key-input-wrapper">
-      <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API key..." />
-      <button onclick="saveApiKey()" class="save-key-btn">Save</button>
-    </div>
-    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="get-key-link">Get free API key →</a>
-  `;
 }
 
 // ============ NAVIGATION ============
@@ -87,7 +44,7 @@ function selectTemplate(template, card) {
   state.template = template;
   document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
   card.classList.add('active');
-  const names = { classic: 'Classic', modern: 'Modern', creative: 'Creative', executive: 'Executive', tech: 'Tech', compact: 'Compact' };
+  const names = { classic: 'Classic', modern: 'Modern', creative: 'Creative', executive: 'Executive', tech: 'Tech', compact: 'Compact', slate: 'Slate', elegant: 'Elegant', minimal: 'Minimal' };
   document.getElementById('currentTemplate').textContent = names[template];
   updatePreview();
   showToast(`✓ Template changed to ${names[template]}`, 'success');
@@ -265,12 +222,12 @@ function renderProjectsList() {
       </div>
       <div class="form-group">
         <label>Project Name</label>
-        <input type="text" value="${escHtml(proj.name)}" placeholder="e.g. ResumeForge AI" oninput="updateProj(${proj.id},'name',this.value)" />
+          <input type="text" value="${escHtml(proj.name)}" placeholder="e.g. Portfolio Website" oninput="updateProj(${proj.id},'name',this.value)" />
       </div>
       <div class="form-row">
         <div class="form-group">
           <label>Tech Stack</label>
-          <input type="text" value="${escHtml(proj.tech)}" placeholder="e.g. React, Node.js, Gemini AI" oninput="updateProj(${proj.id},'tech',this.value)" />
+          <input type="text" value="${escHtml(proj.tech)}" placeholder="e.g. React, Node.js, PostgreSQL" oninput="updateProj(${proj.id},'tech',this.value)" />
         </div>
         <div class="form-group">
           <label>Link / GitHub</label>
@@ -382,6 +339,9 @@ function renderTemplate(template, data) {
     case 'executive': return renderExecutive(data);
     case 'tech': return renderTech(data);
     case 'compact': return renderCompact(data);
+    case 'slate': return renderSlate(data);
+    case 'elegant': return renderElegant(data);
+    case 'minimal': return renderMinimal(data);
     default: return renderClassic(data);
   }
 }
@@ -742,7 +702,63 @@ function renderCompact(data) {
   </div>`;
 }
 
-// ============ AI PANEL ============
+// ============ SLATE ============
+function renderSlate(data) {
+  const name = data.fullName || 'Your Name';
+  return `
+  <div class="resume-slate">
+    <div class="r-header">
+      <div><div class="r-name">${escHtml(name)}</div><div class="r-title">${escHtml(data.jobTitle)}</div></div>
+      <div class="r-contact">${contactRow(data)}</div>
+    </div>
+    <div class="r-body">
+      <main>
+        ${data.summary ? `<div class="r-section"><div class="r-section-title">Profile</div><div class="r-summary">${escHtml(data.summary).replace(/\n/g,'<br>')}</div></div>` : ''}
+        ${data.experiences.some(e => e.title) ? `<div class="r-section"><div class="r-section-title">Experience</div>${expHtml(data.experiences.filter(e => e.title), 'r-item')}</div>` : ''}
+        ${data.projects.some(p => p.name) ? `<div class="r-section"><div class="r-section-title">Selected Projects</div>${projHtml(data.projects.filter(p => p.name), 'r-item')}</div>` : ''}
+      </main>
+      <aside>
+        ${data.skills.length ? `<div class="r-section"><div class="r-section-title">Expertise</div>${skillsHtml(data.skills, 'r-skill-chip')}</div>` : ''}
+        ${data.educations.some(e => e.degree) ? `<div class="r-section"><div class="r-section-title">Education</div>${eduHtml(data.educations.filter(e => e.degree), 'r-item')}</div>` : ''}
+        ${data.certifications ? `<div class="r-section"><div class="r-section-title">Certifications</div><div class="r-summary">${escHtml(data.certifications).replace(/\n/g,'<br>')}</div></div>` : ''}
+      </aside>
+    </div>
+  </div>`;
+}
+
+// ============ ELEGANT ============
+function renderElegant(data) {
+  const name = data.fullName || 'Your Name';
+  return `
+  <div class="resume-elegant">
+    <div class="r-header"><div class="r-kicker">Curriculum Vitae</div><div class="r-name">${escHtml(name)}</div><div class="r-title">${escHtml(data.jobTitle)}</div><div class="r-contact">${contactRow(data)}</div></div>
+    <div class="r-body">
+      ${data.summary ? `<div class="r-section"><div class="r-section-title">Profile</div><div class="r-summary">${escHtml(data.summary).replace(/\n/g,'<br>')}</div></div>` : ''}
+      ${data.experiences.some(e => e.title) ? `<div class="r-section"><div class="r-section-title">Experience</div>${expHtml(data.experiences.filter(e => e.title), 'r-item')}</div>` : ''}
+      ${data.educations.some(e => e.degree) ? `<div class="r-section"><div class="r-section-title">Education</div>${eduHtml(data.educations.filter(e => e.degree), 'r-item')}</div>` : ''}
+      ${data.projects.some(p => p.name) ? `<div class="r-section"><div class="r-section-title">Projects</div>${projHtml(data.projects.filter(p => p.name), 'r-item')}</div>` : ''}
+      ${data.skills.length ? `<div class="r-section"><div class="r-section-title">Skills</div>${skillsHtml(data.skills, 'r-skill-chip')}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+// ============ MINIMAL ============
+function renderMinimal(data) {
+  const name = data.fullName || 'Your Name';
+  return `
+  <div class="resume-minimal">
+    <div class="r-header"><div class="r-name">${escHtml(name)}</div><div class="r-title">${escHtml(data.jobTitle)}</div><div class="r-contact">${contactRow(data)}</div></div>
+    ${data.summary ? `<div class="r-section r-intro"><div class="r-summary">${escHtml(data.summary).replace(/\n/g,'<br>')}</div></div>` : ''}
+    ${data.experiences.some(e => e.title) ? `<div class="r-section"><div class="r-section-title">Experience</div>${expHtml(data.experiences.filter(e => e.title), 'r-item')}</div>` : ''}
+    ${data.projects.some(p => p.name) ? `<div class="r-section"><div class="r-section-title">Projects</div>${projHtml(data.projects.filter(p => p.name), 'r-item')}</div>` : ''}
+    <div class="r-two-col">
+      ${data.educations.some(e => e.degree) ? `<div class="r-section"><div class="r-section-title">Education</div>${eduHtml(data.educations.filter(e => e.degree), 'r-item')}</div>` : ''}
+      ${data.skills.length ? `<div class="r-section"><div class="r-section-title">Skills</div>${skillsHtml(data.skills, 'r-skill-chip')}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+// ============ WRITING ASSISTANT ============
 function toggleAIPanel() {
   const body = document.getElementById('aiPanelBody');
   const toggle = document.querySelector('.ai-panel-toggle');
@@ -751,82 +767,42 @@ function toggleAIPanel() {
 }
 
 async function generateWithAI() {
-  const apiKey = state.apiKey || document.getElementById('geminiApiKey')?.value?.trim();
-  if (!apiKey) {
-    showToast('Please enter your Gemini API key first', 'error');
-    return;
-  }
-
   const action = document.getElementById('aiAction').value;
   const context = document.getElementById('aiContext').value.trim();
   const data = getFormData();
-
   const btn = document.getElementById('aiGenerateBtn');
   const btnText = document.getElementById('aiButtonText');
+
   btn.disabled = true;
-  btnText.innerHTML = '<span class="spinner"></span>Generating...';
+  btnText.innerHTML = '<span class="spinner"></span>Creating...';
+  await new Promise(resolve => setTimeout(resolve, 250));
 
-  const prompts = {
-    summary: `Write a compelling 3-4 sentence professional summary for a resume. 
-Name: ${data.fullName || 'Professional'}, Job Title: ${data.jobTitle || context}.
-Context: ${context}
-Skills: ${data.skills.join(', ')}
-Make it impactful, first-person, ATS-friendly, and highlight key strengths. No fluff.`,
-
-    experience: `Rewrite these experience bullet points to be more impactful and quantified:
-Role: ${data.jobTitle || context}
-Context: ${context}
-${data.experiences.filter(e=>e.title).map(e => `- ${e.title} at ${e.company}: ${e.desc}`).join('\n')}
-Use strong action verbs, include metrics where possible, keep each point under 2 lines.`,
-
-    skills: `Suggest 15-20 relevant technical and soft skills for a ${data.jobTitle || context} role.
-Context: ${context}
-Format: comma-separated list only, no explanations.`,
-
-    objective: `Write a focused 2-3 sentence career objective for:
-Role targeting: ${data.jobTitle || context}
-Context: ${context}
-Make it specific, goal-oriented, and tailored for ${data.jobTitle || context} position.`,
-
-    improve: `Review and improve this resume content:
-Name: ${data.fullName}, Title: ${data.jobTitle}
-Summary: ${data.summary}
-Skills: ${data.skills.join(', ')}
-Experience: ${data.experiences.filter(e=>e.title).map(e => `${e.title} at ${e.company}`).join(', ')}
-Context: ${context}
-Provide 5 specific improvements with examples. Be concise and actionable.`
+  const role = data.jobTitle || context || 'professional';
+  const topSkills = data.skills.slice(0, 4).join(', ') || 'communication, problem solving, and collaboration';
+  const outputs = {
+    summary: `Results-focused ${role} with experience delivering reliable, user-centered work. Skilled in ${topSkills}, with a practical approach to solving problems and collaborating across teams. Known for taking ownership, learning quickly, and turning goals into measurable outcomes.`,
+    experience: data.experiences.filter(e => e.title).map(e => `Led ${e.title.toLowerCase()} responsibilities at ${e.company || 'the organization'}, improving delivery through clear priorities, cross-functional collaboration, and measurable results.`).join('\n') || `Led key ${role} initiatives, improved day-to-day delivery, and collaborated with stakeholders to achieve measurable results.`,
+    skills: suggestSkills(role),
+    objective: `Motivated ${role} seeking an opportunity to apply ${topSkills} in a growth-focused team. Eager to contribute dependable execution, thoughtful problem solving, and continuous improvement from day one.`,
+    improve: `1. Add measurable outcomes to each experience entry.\n2. Start bullets with strong action verbs.\n3. Keep the summary focused on role, strengths, and impact.\n4. Prioritize skills from the target job description.\n5. Remove generic phrases and keep only relevant content.`
   };
 
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompts[action] }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
-        })
-      }
-    );
+  document.getElementById('aiOutputText').textContent = outputs[action];
+  document.getElementById('aiOutput').style.display = 'block';
+  btn.disabled = false;
+  btnText.textContent = 'Create suggestion';
+  showToast('Writing suggestion ready', 'success');
+}
 
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.error?.message || 'API error');
-    }
-
-    const result = await response.json();
-    const text = result.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
-
-    document.getElementById('aiOutputText').textContent = text;
-    document.getElementById('aiOutput').style.display = 'block';
-    showToast('✨ AI content generated!', 'success');
-  } catch (err) {
-    showToast('Error: ' + err.message, 'error');
-  } finally {
-    btn.disabled = false;
-    btnText.innerHTML = '✨ Generate with Gemini';
-  }
+function suggestSkills(role) {
+  const normalized = role.toLowerCase();
+  const general = ['Communication', 'Problem Solving', 'Teamwork', 'Time Management', 'Adaptability', 'Leadership'];
+  let specific = ['Project Management', 'Data Analysis', 'Process Improvement', 'Stakeholder Management', 'Documentation', 'Quality Assurance'];
+  if (/developer|engineer|software|web|frontend|backend/.test(normalized)) specific = ['JavaScript', 'Git', 'APIs', 'Testing', 'Debugging', 'System Design', 'Agile', 'Code Review'];
+  if (/design|creative|ux|ui/.test(normalized)) specific = ['Figma', 'User Research', 'Wireframing', 'Prototyping', 'Design Systems', 'Accessibility', 'Visual Design'];
+  if (/data|analyst|science/.test(normalized)) specific = ['SQL', 'Python', 'Data Visualization', 'Statistics', 'Excel', 'Dashboards', 'Data Cleaning'];
+  if (/marketing|sales|growth/.test(normalized)) specific = ['Campaign Strategy', 'SEO', 'CRM', 'Analytics', 'Copywriting', 'Lead Generation', 'Market Research'];
+  return [...specific, ...general].join(', ');
 }
 
 function copyAIOutput() {
@@ -864,52 +840,40 @@ async function downloadPDF() {
   btn.disabled = true;
 
   const preview = document.getElementById('resumePreview');
-  const container = document.getElementById('previewScaleContainer');
-  const viewport = document.getElementById('previewViewport');
-  if (!preview || !container || !viewport) {
+  if (!preview || typeof html2pdf === 'undefined') {
     btn.innerHTML = '<span>📥</span> Download PDF';
     btn.disabled = false;
     return;
   }
 
-  // Temporarily disable scaling & transitions to ensure a clean 1:1 render
-  const originalTransform = container.style.transform;
-  const originalTransition = container.style.transition;
-  const originalVWidth = viewport.style.width;
-  const originalVHeight = viewport.style.height;
-
-  container.style.transition = 'none';
-  container.style.transform = 'none';
-  viewport.style.width = '794px';
-  viewport.style.height = '1123px';
-
-  // Small delay to allow browser layout paint
-  await new Promise(r => setTimeout(r, 100));
+  updatePreview();
+  const exportHost = document.createElement('div');
+  exportHost.className = 'pdf-export-host';
+  const exportResume = preview.cloneNode(true);
+  exportResume.removeAttribute('id');
+  exportResume.classList.add('pdf-export-resume');
+  exportHost.appendChild(exportResume);
+  document.body.appendChild(exportHost);
+  await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
   const opt = {
     margin: 0,
     filename: `${name.replace(/\s+/g, '_')}_Resume.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-    jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait' }
+    pagebreak: { mode: ['css', 'legacy'] },
+    html2canvas: { scale: 2, useCORS: true, letterRendering: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
+    jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait', hotfixes: ['px_scaling'] }
   };
 
   try {
-    await html2pdf().set(opt).from(preview).save();
+    await html2pdf().set(opt).from(exportResume).save();
     showToast('✓ Resume downloaded!', 'success');
   } catch (e) {
     console.error(e);
     showToast('Error generating PDF', 'error');
   }
 
-  // Restore scaling & transitions
-  container.style.transform = originalTransform;
-  viewport.style.width = originalVWidth;
-  viewport.style.height = originalVHeight;
-  
-  setTimeout(() => {
-    container.style.transition = originalTransition;
-  }, 50);
+  exportHost.remove();
 
   btn.innerHTML = '<span>📥</span> Download PDF';
   btn.disabled = false;
@@ -943,7 +907,7 @@ function fillSampleData() {
 
   state.projects = [
     { id: 301, name: 'MadCoder.in', tech: 'Next.js, Node.js, MongoDB', link: 'madcoder.in', desc: 'Personal coding portfolio and blog platform with 10,000+ monthly visitors. Features coding tutorials, project showcases, and developer resources.' },
-    { id: 302, name: 'ResumeForge AI', tech: 'HTML, CSS, JS, Gemini API', link: 'github.com/madcoder/resumeforge', desc: 'AI-powered resume builder with 6 professional templates and Gemini AI integration for smart content generation.' }
+    { id: 302, name: 'ResumeForge', tech: 'HTML, CSS, JavaScript', link: 'github.com/madcoder/resumeforge', desc: 'Privacy-first resume builder with nine professional templates, guided writing support, live preview, and reliable PDF export.' }
   ];
   renderProjectsList();
 
