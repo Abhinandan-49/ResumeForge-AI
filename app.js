@@ -291,7 +291,56 @@ function updatePreview() {
     preview.style.removeProperty('--resume-font');
   }
 
+  // Paginate the preview dynamically to show separate sheets
+  paginatePreview();
+
   applyScale();
+}
+
+function paginatePreview() {
+  const preview = document.getElementById('resumePreview');
+  if (!preview) return;
+
+  // Remove existing spacers
+  const existingSpacers = preview.querySelectorAll('.preview-page-break-spacer');
+  existingSpacers.forEach(s => s.remove());
+
+  const pageHeight = 1123;
+  const gapHeight = 24; // Visual gap in px
+
+  // Query elements that are candidates for page breaks
+  const candidates = preview.querySelectorAll('.r-item, .r-section-title, .r-summary, .r-skills-grid, .r-skills-row, .r-contact, .r-contact-row, .r-sidebar-item, .r-sidebar-section, .r-row');
+  
+  // Calculate the current scale factor of the preview
+  const scale = preview.offsetWidth ? (preview.getBoundingClientRect().width / preview.offsetWidth) : 1;
+  const previewRect = preview.getBoundingClientRect();
+
+  candidates.forEach(el => {
+    const rect = el.getBoundingClientRect();
+    const top = (rect.top - previewRect.top) / scale;
+    const bottom = (rect.bottom - previewRect.top) / scale;
+
+    const topPage = Math.floor(top / pageHeight);
+    const bottomPage = Math.floor(bottom / pageHeight);
+
+    // If it crosses a page boundary
+    if (topPage !== bottomPage) {
+      const nextPageStart = (topPage + 1) * pageHeight;
+      const spacerHeight = (nextPageStart - top) + gapHeight;
+
+      const spacer = document.createElement('div');
+      spacer.className = 'preview-page-break-spacer';
+      spacer.style.height = `${spacerHeight}px`;
+      spacer.style.width = '100%';
+      spacer.style.background = '#2a2a3e'; // Match preview-wrapper background
+      spacer.style.boxShadow = 'inset 0 8px 10px -8px rgba(0,0,0,0.6), inset 0 -8px 10px -8px rgba(0,0,0,0.6)';
+      spacer.style.margin = '0';
+      spacer.style.padding = '0';
+      spacer.style.border = 'none';
+
+      el.parentNode.insertBefore(spacer, el);
+    }
+  });
 }
 
 function applyScale() {

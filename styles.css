@@ -806,6 +806,15 @@ body {
   break-inside: avoid !important;
 }
 
+/* Page Spacers for Live Preview */
+.preview-page-break-spacer {
+  display: block;
+  pointer-events: none;
+}
+.pdf-export-resume .preview-page-break-spacer {
+  display: none !important;
+}
+
 /* ============================================
    RESUME TEMPLATES (ACTUAL OUTPUT)
    ============================================ */
