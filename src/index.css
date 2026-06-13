@@ -779,9 +779,15 @@ body {
   min-height: 1123px; /* A4 height */
   background: white;
   overflow: visible; position: relative;
-  /* Premium dashed guide line at every 1123px page boundary */
-  background-image: linear-gradient(to bottom, transparent 1122px, rgba(139,92,246,0.3) 1122px, rgba(139,92,246,0.3) 1123px, transparent 1123px);
-  background-size: 100% 1123px;
+  /* Premium dashed guide line at every 1043px page boundary (1123px minus 40px top/bottom margins) */
+  background-image: linear-gradient(to bottom, transparent 1042px, rgba(139,92,246,0.3) 1042px, rgba(139,92,246,0.3) 1043px, transparent 1043px);
+  background-size: 100% 1043px;
+}
+
+.resume-preview.fit-single-page {
+  /* Premium dashed guide line at every 1075px page boundary (1123px minus 24px top/bottom margins) */
+  background-image: linear-gradient(to bottom, transparent 1074px, rgba(139,92,246,0.3) 1074px, rgba(139,92,246,0.3) 1075px, transparent 1075px);
+  background-size: 100% 1075px;
 }
 
 .pdf-export-host {
@@ -794,6 +800,17 @@ body {
   pointer-events: none;
 }
 .pdf-export-resume { width: 794px; min-height: 1123px; overflow: visible; background-image: none !important; }
+
+/* Force template top padding to 0 in PDF export to let html2pdf page margins handle top spacing */
+.pdf-export-resume.resume-classic,
+.pdf-export-resume.resume-compact,
+.pdf-export-resume.resume-elegant,
+.pdf-export-resume.resume-minimal,
+.pdf-export-resume .r-sidebar,
+.pdf-export-resume .r-main,
+.pdf-export-resume .r-header {
+  padding-top: 0 !important;
+}
 
 /* Prevent elements from breaking across PDF pages */
 .r-item,
@@ -826,7 +843,7 @@ body {
 /* ---- CLASSIC TEMPLATE ---- */
 .resume-classic {
   font-family: 'Georgia', 'Times New Roman', serif;
-  color: #1a1a2e; padding: 48px 52px;
+  color: #1a1a2e; padding: 40px 52px;
 }
 .resume-classic .r-header { text-align: center; border-bottom: 2px solid #1a1a2e; padding-bottom: 16px; margin-bottom: 20px; }
 .resume-classic .r-name { font-size: 2rem; font-weight: 700; color: #1a1a2e; letter-spacing: 1px; }
@@ -851,7 +868,7 @@ body {
 
 /* ---- MODERN TEMPLATE ---- */
 .resume-modern { display: flex; font-family: 'Inter', Arial, sans-serif; color: #1a1a2e; min-height: 100%; }
-.resume-modern .r-sidebar { width: 220px; background: #1a1a2e; color: white; padding: 36px 20px; flex-shrink: 0; }
+.resume-modern .r-sidebar { width: 220px; background: #1a1a2e; color: white; padding: 40px 20px; flex-shrink: 0; }
 .resume-modern .r-sidebar-avatar {
   width: 80px; height: 80px; border-radius: 50%;
   background: linear-gradient(135deg, #8b5cf6, #06b6d4);
@@ -867,7 +884,7 @@ body {
 .resume-modern .r-skill-name { font-size: 0.75rem; color: rgba(255,255,255,0.8); margin-bottom: 3px; }
 .resume-modern .r-skill-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
 .resume-modern .r-skill-fill { height: 100%; background: linear-gradient(90deg, #8b5cf6, #06b6d4); border-radius: 2px; width: 80%; }
-.resume-modern .r-main { flex: 1; padding: 36px 28px; }
+.resume-modern .r-main { flex: 1; padding: 40px 28px; }
 .resume-modern .r-main-name { font-size: 1.8rem; font-weight: 900; color: #1a1a2e; }
 .resume-modern .r-main-title { font-size: 1rem; color: #8b5cf6; font-weight: 600; margin-bottom: 16px; }
 .resume-modern .r-section { margin-top: 20px; }
@@ -945,7 +962,7 @@ body {
 
 /* ---- TECH TEMPLATE ---- */
 .resume-tech { font-family: 'Courier New', monospace; background: #0d1117; color: #c9d1d9; }
-.resume-tech .r-header { background: #161b22; padding: 32px 40px; border-bottom: 1px solid #30363d; }
+.resume-tech .r-header { background: #161b22; padding: 40px 40px; border-bottom: 1px solid #30363d; }
 .resume-tech .r-terminal-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
 .resume-tech .r-terminal-dots { display: flex; gap: 6px; }
 .resume-tech .r-terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
@@ -974,7 +991,7 @@ body {
 .resume-tech .r-summary::after { content: ' */'; color: #6e7681; }
 
 /* ---- COMPACT TEMPLATE ---- */
-.resume-compact { font-family: 'Inter', Arial, sans-serif; color: #1a1a2e; padding: 36px 44px; }
+.resume-compact { font-family: 'Inter', Arial, sans-serif; color: #1a1a2e; padding: 40px 44px; }
 .resume-compact .r-header { border-bottom: 3px solid #10b981; padding-bottom: 16px; margin-bottom: 20px; }
 .resume-compact .r-name { font-size: 1.8rem; font-weight: 900; color: #1a1a2e; }
 .resume-compact .r-title { font-size: 0.92rem; color: #10b981; font-weight: 600; }
@@ -996,7 +1013,7 @@ body {
 
 /* ---- SLATE TEMPLATE ---- */
 .resume-slate { min-height: 1123px; font-family: 'Inter', Arial, sans-serif; color: #243140; background: #f8fafc; }
-.resume-slate .r-header { min-height: 170px; padding: 42px 50px; background: #263548; color: white; display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; }
+.resume-slate .r-header { min-height: 170px; padding: 40px 50px; background: #263548; color: white; display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; }
 .resume-slate .r-name { font-size: 2.2rem; font-weight: 800; letter-spacing: 1px; }
 .resume-slate .r-title { color: #9ed8d0; text-transform: uppercase; letter-spacing: 2px; font-size: .82rem; }
 .resume-slate .r-contact { max-width: 320px; text-align: right; font-size: .75rem; line-height: 1.8; color: #d5e0e8; }
@@ -1015,7 +1032,7 @@ body {
 .resume-slate .r-skill-chip { padding: 4px 9px; background: #dce9e7; color: #2f6f68; border-radius: 4px; font-size: .72rem; }
 
 /* ---- ELEGANT TEMPLATE ---- */
-.resume-elegant { min-height: 1123px; padding: 52px 64px 52px 78px; border-left: 18px solid #9a7554; background: #fffdf8; color: #3c3028; font-family: Georgia, 'Times New Roman', serif; }
+.resume-elegant { min-height: 1123px; padding: 40px 64px 40px 78px; border-left: 18px solid #9a7554; background: #fffdf8; color: #3c3028; font-family: Georgia, 'Times New Roman', serif; }
 .resume-elegant .r-header { padding-bottom: 22px; border-bottom: 1px solid #cfb9a5; }
 .resume-elegant .r-kicker { color: #9a7554; font: 700 .68rem 'Inter', sans-serif; letter-spacing: 3px; text-transform: uppercase; }
 .resume-elegant .r-name { margin-top: 8px; font-size: 2.6rem; line-height: 1.1; font-weight: 500; }
@@ -1034,7 +1051,7 @@ body {
 .resume-elegant .r-skill-chip { border-bottom: 1px solid #b99a7e; padding: 3px 6px; font: .76rem 'Inter', sans-serif; }
 
 /* ---- MINIMAL TEMPLATE ---- */
-.resume-minimal { min-height: 1123px; padding: 52px 58px; background: #fff; color: #111; font-family: 'Inter', Arial, sans-serif; }
+.resume-minimal { min-height: 1123px; padding: 40px 58px; background: #fff; color: #111; font-family: 'Inter', Arial, sans-serif; }
 .resume-minimal .r-header { border-bottom: 4px solid #111; padding-bottom: 18px; }
 .resume-minimal .r-name { font-size: 2.35rem; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; }
 .resume-minimal .r-title { color: #666; text-transform: uppercase; letter-spacing: 2px; font-size: .78rem; }
@@ -1126,20 +1143,20 @@ body {
 }
 
 /* Template Specific Compactions */
-.fit-single-page.resume-classic { padding: 32px 40px !important; }
+.fit-single-page.resume-classic { padding: 24px 40px !important; }
 .fit-single-page.resume-classic .r-header { padding-bottom: 10px !important; margin-bottom: 12px !important; }
 
 .fit-single-page.resume-modern .r-sidebar { padding: 24px 16px !important; }
 .fit-single-page.resume-modern .r-main { padding: 24px 20px !important; }
 
-.fit-single-page.resume-creative .r-header { padding: 20px 32px !important; }
+.fit-single-page.resume-creative .r-header { padding: 24px 32px !important; }
 .fit-single-page.resume-creative .r-left { padding: 16px 16px 16px 32px !important; }
 .fit-single-page.resume-creative .r-right { padding: 16px 16px !important; }
 
-.fit-single-page.resume-executive .r-header { padding: 20px 32px !important; }
+.fit-single-page.resume-executive .r-header { padding: 24px 32px !important; }
 .fit-single-page.resume-executive .r-body { padding: 16px 32px !important; }
 
-.fit-single-page.resume-tech .r-header { padding: 16px 24px !important; }
+.fit-single-page.resume-tech .r-header { padding: 24px 24px !important; }
 .fit-single-page.resume-tech .r-body { padding: 12px 24px !important; }
 
 .fit-single-page.resume-compact { padding: 24px 32px !important; }
@@ -1148,9 +1165,9 @@ body {
 .fit-single-page.resume-slate main { padding: 20px 24px 24px 36px !important; }
 .fit-single-page.resume-slate aside { padding: 20px 24px 24px 20px !important; }
 
-.fit-single-page.resume-elegant { padding: 32px 44px 32px 52px !important; }
+.fit-single-page.resume-elegant { padding: 24px 44px 24px 52px !important; }
 
-.fit-single-page.resume-minimal { padding: 32px 40px !important; }
+.fit-single-page.resume-minimal { padding: 24px 40px !important; }
 
 /* ============================================
    CUSTOM FONT FAMILY OVERRIDES
